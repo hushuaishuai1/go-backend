@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: binance-alert-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - SMTP_HOST=smtp-relay.brevo.com
+      - SMTP_PORT=587
+      - SMTP_USERNAME=YOUR_BREVO_SMTP_LOGIN_HERE # <-- 替换为占位符
+      - SMTP_PASSWORD=YOUR_BREVO_V3_API_KEY_HERE  # <-- 替换为占位符
+      - SMTP_SENDER=YOUR_VERIFIED_SENDER_EMAIL_HERE # <-- 替换为占位符
