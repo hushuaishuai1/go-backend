@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: binance-alert-backend
+    restart: always
+    # 注意：不再直接暴露8080端口到主机
+    # 而是让nginx服务访问内部网络的8080端口
+    expose:
+      - "8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - SMTP_HOST=smtp-relay.brevo.com
+      - SMTP_PORT=587
+      - SMTP_USERNAME=YOUR_BREVO_SMTP_LOGIN_HERE # 替换为您的实际值
+      - SMTP_PASSWORD=YOUR_BREVO_V3_API_KEY_HERE # 替换为您的实际值
+      - SMTP_SENDER=YOUR_VERIFIED_SENDER_EMAIL_HERE # 替换为您的实际值
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-ssl-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/www:/usr/share/nginx/html
+    depends_on:
+      - backend

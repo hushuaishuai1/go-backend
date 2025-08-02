@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 	"strconv"
+
 	"github.com/hushuaishuai1/go-backend/internal/models"
 	"github.com/hushuaishuai1/go-backend/internal/services"
 
@@ -15,11 +16,18 @@ func SetupRouter(am *services.AlertManager) *echo.Echo {
 	// 创建一个新的Echo实例
 	e := echo.New()
 
-	// 配置CORS中间件 (这是Echo内置的、更简洁的方式)
+	// 配置CORS中间件
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		// 在生产环境中，为了安全，应将 "*" 替换为您的前端域名，例如 "https://jiagejiankong.store"
-		AllowOrigins: []string{"*"}, 
-		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
+		AllowOrigins: []string{
+	"http://jiagejiankong.store",
+	"https://jiagejiankong.store",
+	"http://www.jiagejiankong.store",
+	"https://www.jiagejiankong.store",
+	"price-alert-final-repo.pages.dev",
+     },
+		AllowMethods:     []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowCredentials: true,
 	}))
 
 	// API路由分组

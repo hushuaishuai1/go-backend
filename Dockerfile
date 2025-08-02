@@ -1,5 +1,5 @@
 # --- Build Stage ---
-FROM golang:1.22-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
@@ -10,9 +10,9 @@ RUN go mod download
 # 复制所有源代码
 COPY . .
 
-# 编译应用
-# CGO_ENABLED=0 是为了静态编译，GOOS=linux是为了确保在Linux上运行
-RUN CGO_ENABLED=0 GOOS=linux go build -o /go-app ./cmd
+# 编译应用，go-sqlite3 需要 CGO 支持，需安装 gcc 和 musl-dev
+RUN apk add --no-cache gcc musl-dev
+RUN CGO_ENABLED=1 GOOS=linux go build -o /go-app ./cmd/main.go
 
 # --- Final Stage ---
 FROM alpine:3.18
