@@ -12,7 +12,7 @@ import (
 // AlertManager 负责管理所有警报
 type AlertManager struct {
 	db *gorm.DB
-	// 使用 sync.Map 以保证并发安全
+	// 使用 sync.Map 以保证并发安全NewAlertManager
 	// 结构: map[string]*sync.Map -> map[Symbol]*sync.Map
 	// 第二层map: map[uint]models.Alert -> map[AlertID]Alert
 	activeAlerts *sync.Map
